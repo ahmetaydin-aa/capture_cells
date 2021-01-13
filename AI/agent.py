@@ -28,5 +28,3 @@ class Agent(object):
     def __init__(self, player: Player, gui: GUI):
         self.player = player
         self.gui = gui
-
-    def make_move(self):

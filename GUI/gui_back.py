@@ -46,32 +46,24 @@ class GUI(object):
             return True
         return False
 
-    def capture_cell(self, x: int, y: int, player: Player) -> (bool, str):
-        if player.player_id == self.which_players_turn():
+    def can_be_captured(self, x: int, y: int, player: Player, ai_try: bool = False) -> (bool, str):
+        if player.player_id == self.which_players_turn() or ai_try:
             if x < self.get_width() and y < self.get_width():
                 grid_value: int = self.get_cell(x, y)
                 reason: str = ""
 
                 border_condition: bool = False
-                north_cell_exists: bool = False
-                east_cell_exists: bool = False
-                south_cell_exists: bool = False
-                west_cell_exists: bool = False
                 if y - 1 >= 0:
                     border_condition = border_condition or (self.get_cell(x, y-1) == player.player_id)
-                    north_cell_exists = True
 
                 if x + 1 < self.get_width():
                     border_condition = border_condition or (self.get_cell(x + 1, y) == player.player_id)
-                    east_cell_exists = True
 
                 if y + 1 < self.get_width():
                     border_condition = border_condition or (self.get_cell(x, y + 1) == player.player_id)
-                    south_cell_exists = True
 
                 if x - 1 >= 0:
                     border_condition = border_condition or (self.get_cell(x - 1, y) == player.player_id)
-                    west_cell_exists = True
 
                 if not border_condition:
                     reason = "Selected cell doesn't exists on the player's border."
@@ -94,20 +86,6 @@ class GUI(object):
                     reason = "Cell is already captured."
 
                 if grid_value == 0 and border_condition:
-                    self.set_cell(x, y, player.player_id)
-
-                    if north_cell_exists:
-                        self.set_cell(x, y - 1, player.player_id)
-                    if east_cell_exists:
-                        self.set_cell(x + 1, y, player.player_id)
-                    if south_cell_exists:
-                        self.set_cell(x, y + 1, player.player_id)
-                    if west_cell_exists:
-                        self.set_cell(x - 1, y, player.player_id)
-
-                    self.next_turn()
-                    if self.recalculate_scores():
-                        return True, "Game Over"
                     return True, ""
                 else:
                     return False, reason
@@ -117,3 +95,28 @@ class GUI(object):
         else:
             reason = "It's not your turn."
             return False, reason
+
+    def capture_cell(self, x: int, y: int, player: Player) -> (bool, str):
+        result, reason = self.can_be_captured(x, y, player)
+
+        if result:
+            north_cell_exists: bool = True if y - 1 >= 0 else False
+            east_cell_exists: bool = True if x + 1 < self.get_width() else False
+            south_cell_exists: bool = True if y + 1 < self.get_width() else False
+            west_cell_exists: bool = True if x - 1 >= 0 else False
+
+            self.set_cell(x, y, player.player_id)
+
+            if north_cell_exists:
+                self.set_cell(x, y - 1, player.player_id)
+            if east_cell_exists:
+                self.set_cell(x + 1, y, player.player_id)
+            if south_cell_exists:
+                self.set_cell(x, y + 1, player.player_id)
+            if west_cell_exists:
+                self.set_cell(x - 1, y, player.player_id)
+
+            self.next_turn()
+            if self.recalculate_scores():
+                return True, "Game Over"
+        return result, reason

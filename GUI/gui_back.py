@@ -28,6 +28,11 @@ class GUI(object):
     def get_world(self) -> list:
         return self.world
 
+    def get_world_matrix(self) -> list:
+        width = self.get_width()
+        world_matrix = [map(str, self.world[i:i + width]) for i in range(0, width * width, width)]
+        return world_matrix
+
     def print_world(self) -> None:
         width = self.get_width()
         world_matrix = [map(str, self.world[i:i + width]) for i in range(0, width*width, width)]

@@ -21,8 +21,8 @@ if __name__ == "__main__":
         # move_score_2, move_2 = pruner.get_my_best_move(1)
         # if move_2 != None:
         #     x, y = get_coord_of_cell(move_2, gui.get_width())
-        #     print("x:", x, "- y:", y, " --", move_score)
-        #     print(gui.capture_cell(x, y, p2))
+        #     print("x:", x, "- y:", y, " --", move_score, "(", p2.player_id, ")")
+        #     gui.capture_cell(x, y, p2)
         # else:
         #     gui.game_over = True
         #     break
@@ -30,8 +30,8 @@ if __name__ == "__main__":
         # move_score_1, move_1 = pruner.get_my_best_move(0)
         # if move_1 != None:
         #     x, y = get_coord_of_cell(move_1, gui.get_width())
-        #     print("x:", x, "- y:", y, " --", move_score)
-        #     print(gui.capture_cell(x, y, p1))
+        #     print("x:", x, "- y:", y, " --", move_score, "(", p1.player_id, ")")
+        #     gui.capture_cell(x, y, p1)
         # else:
         #     gui.game_over = True
         #     break

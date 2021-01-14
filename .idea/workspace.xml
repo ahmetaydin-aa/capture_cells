@@ -19,10 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b608a0c1-3d20-4e4c-8925-5c419436454f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/GUI/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/CaptureCells.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CaptureCells.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="b608a0c1-3d20-4e4c-8925-5c419436454f" name="Default Changelist" comment="AlphaBeta Pruning implemented.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AI/alpha_beta.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/alpha_beta.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/gui_back.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/gui_back.py" afterDir="false" />
@@ -52,6 +49,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -93,6 +91,14 @@
       <option name="presentableId" value="Default" />
       <updated>1610551154698</updated>
     </task>
+    <task id="LOCAL-00001" summary="AlphaBeta Pruning implemented.">
+      <created>1610632956655</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1610632956655</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -106,27 +112,31 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="AlphaBeta Pruning implemented." />
+    <option name="LAST_COMMIT_MESSAGE" value="AlphaBeta Pruning implemented." />
+  </component>
   <component name="WindowStateProjectService">
     <state x="739" y="294" key="FileChooserDialogImpl" timestamp="1610608980265">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="739" y="294" key="FileChooserDialogImpl/0.0.1920.1080@0.0.1920.1080" timestamp="1610608980265" />
-    <state width="1899" height="257" key="GridCell.Tab.0.bottom" timestamp="1610629829946">
+    <state width="1899" height="257" key="GridCell.Tab.0.bottom" timestamp="1610653230247">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1899" height="257" key="GridCell.Tab.0.bottom/0.0.1920.1080@0.0.1920.1080" timestamp="1610629829946" />
-    <state width="1899" height="257" key="GridCell.Tab.0.center" timestamp="1610629829946">
+    <state width="1899" height="257" key="GridCell.Tab.0.bottom/0.0.1920.1080@0.0.1920.1080" timestamp="1610653230247" />
+    <state width="1899" height="257" key="GridCell.Tab.0.center" timestamp="1610653230247">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1899" height="257" key="GridCell.Tab.0.center/0.0.1920.1080@0.0.1920.1080" timestamp="1610629829946" />
-    <state width="1899" height="257" key="GridCell.Tab.0.left" timestamp="1610629829945">
+    <state width="1899" height="257" key="GridCell.Tab.0.center/0.0.1920.1080@0.0.1920.1080" timestamp="1610653230247" />
+    <state width="1899" height="257" key="GridCell.Tab.0.left" timestamp="1610653230247">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1899" height="257" key="GridCell.Tab.0.left/0.0.1920.1080@0.0.1920.1080" timestamp="1610629829945" />
-    <state width="1899" height="257" key="GridCell.Tab.0.right" timestamp="1610629829946">
+    <state width="1899" height="257" key="GridCell.Tab.0.left/0.0.1920.1080@0.0.1920.1080" timestamp="1610653230247" />
+    <state width="1899" height="257" key="GridCell.Tab.0.right" timestamp="1610653230247">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1899" height="257" key="GridCell.Tab.0.right/0.0.1920.1080@0.0.1920.1080" timestamp="1610629829946" />
+    <state width="1899" height="257" key="GridCell.Tab.0.right/0.0.1920.1080@0.0.1920.1080" timestamp="1610653230247" />
     <state width="1899" height="363" key="GridCell.Tab.1.bottom" timestamp="1610617524769">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
@@ -143,5 +153,13 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state width="1899" height="363" key="GridCell.Tab.1.right/0.0.1920.1080@0.0.1920.1080" timestamp="1610617524769" />
+    <state x="461" y="184" key="SettingsEditor" timestamp="1610632996736">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="461" y="184" key="SettingsEditor/0.0.1920.1080@0.0.1920.1080" timestamp="1610632996736" />
+    <state x="552" y="272" key="Vcs.Push.Dialog.v2" timestamp="1610633019546">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="552" y="272" key="Vcs.Push.Dialog.v2/0.0.1920.1080@0.0.1920.1080" timestamp="1610633019546" />
   </component>
 </project>

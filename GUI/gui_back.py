@@ -1,4 +1,5 @@
 from .player import Position, Player
+from .utils import *
 import math
 from collections import Counter
 
@@ -8,6 +9,7 @@ class GUI(object):
     world: list = None
     players: list = []
     player_of_the_turn: int = 1
+    game_over: bool = False
 
     def __init__(self, grid_size: int) -> None:
         self.world = [0 for _ in range(grid_size * grid_size)]
@@ -25,6 +27,12 @@ class GUI(object):
 
     def get_world(self) -> list:
         return self.world
+
+    def print_world(self) -> None:
+        width = self.get_width()
+        world_matrix = [map(str, self.world[i:i + width]) for i in range(0, width*width, width)]
+        for row in world_matrix:
+            print(" ".join(row))
 
     def get_width(self) -> int:
         return int(math.sqrt(len(self.world)))
@@ -46,77 +54,19 @@ class GUI(object):
             return True
         return False
 
-    def can_be_captured(self, x: int, y: int, player: Player, ai_try: bool = False) -> (bool, str):
-        if player.player_id == self.which_players_turn() or ai_try:
-            if x < self.get_width() and y < self.get_width():
-                grid_value: int = self.get_cell(x, y)
-                reason: str = ""
-
-                border_condition: bool = False
-                if y - 1 >= 0:
-                    border_condition = border_condition or (self.get_cell(x, y-1) == player.player_id)
-
-                if x + 1 < self.get_width():
-                    border_condition = border_condition or (self.get_cell(x + 1, y) == player.player_id)
-
-                if y + 1 < self.get_width():
-                    border_condition = border_condition or (self.get_cell(x, y + 1) == player.player_id)
-
-                if x - 1 >= 0:
-                    border_condition = border_condition or (self.get_cell(x - 1, y) == player.player_id)
-
-                if not border_condition:
-                    reason = "Selected cell doesn't exists on the player's border."
-
-                if player.first_turn:
-                    if player.position == Position.N and y == 0:
-                        border_condition = True
-                    elif player.position == Position.S and y == self.get_width() - 1:
-                        border_condition = True
-                    elif player.position == Position.W and x == 0:
-                        border_condition = True
-                    elif player.position == Position.E and x == self.get_width() - 1:
-                        border_condition = True
-                    player.first_turn = False
-
-                    if not border_condition:
-                        reason = "Please select one of the cells on your side on the first turn."
-
-                if grid_value != 0:
-                    reason = "Cell is already captured."
-
-                if grid_value == 0 and border_condition:
-                    return True, ""
-                else:
-                    return False, reason
-            else:
-                reason = "Selected cell is out of world boundary."
-                return False, reason
-        else:
-            reason = "It's not your turn."
-            return False, reason
-
     def capture_cell(self, x: int, y: int, player: Player) -> (bool, str):
-        result, reason = self.can_be_captured(x, y, player)
+        result, reason = can_be_captured(self.world, x, y, player, self.which_players_turn())
 
         if result:
-            north_cell_exists: bool = True if y - 1 >= 0 else False
-            east_cell_exists: bool = True if x + 1 < self.get_width() else False
-            south_cell_exists: bool = True if y + 1 < self.get_width() else False
-            west_cell_exists: bool = True if x - 1 >= 0 else False
-
             self.set_cell(x, y, player.player_id)
 
-            if north_cell_exists:
-                self.set_cell(x, y - 1, player.player_id)
-            if east_cell_exists:
-                self.set_cell(x + 1, y, player.player_id)
-            if south_cell_exists:
-                self.set_cell(x, y + 1, player.player_id)
-            if west_cell_exists:
-                self.set_cell(x - 1, y, player.player_id)
+            for nX, nY in get_all_neighbors(x, y, self.get_width()):
+                self.set_cell(nX, nY, player.player_id)
 
             self.next_turn()
             if self.recalculate_scores():
+                self.game_over = True
                 return True, "Game Over"
+        if "game over" in reason.lower():
+            self.game_over = True
         return result, reason

@@ -1,4 +1,5 @@
 from collections import Counter
+from GUI.utils import *
 import random
 
 
@@ -9,73 +10,44 @@ class AlphaBetaPruner(object):
     def __init__(self, gui):
         self.gui = gui
 
-    def get_possible_moves(self, world, player_id):
-        while True:
-            x = random.randint(0, self.gui.get_width())
-            y = random.randint(0, self.gui.get_width())
-            result, _ = self.gui.can_be_captured(x, y, self.gui.players[player_id], True)
+    def get_my_best_move(self, player_index: int = 0):
+        return self.__alpha_beta_pruner(self.gui.world, 0, 7, player_index, True, self.ALPHA, self.BETA)
 
-            if result:
-                north_cell_exists: bool = True if y - 1 >= 0 else False
-                east_cell_exists: bool = True if x + 1 < self.gui.get_width() else False
-                south_cell_exists: bool = True if y + 1 < self.gui.get_width() else False
-                west_cell_exists: bool = True if x - 1 >= 0 else False
-
-                ref_index = self.gui.get_ref_index(x, y)
-
-                if north_cell_exists:
-                    self.set_cell(x, y - 1, player.player_id)
-                if east_cell_exists:
-                    self.set_cell(x + 1, y, player.player_id)
-                if south_cell_exists:
-                    self.set_cell(x, y + 1, player.player_id)
-                if west_cell_exists:
-                    self.set_cell(x - 1, y, player.player_id)
-
-                self.next_turn()
-                if self.recalculate_scores():
-                    return True, "Game Over"
-
-
-    def alpha_beta_pruner(self, world, depth, max_depth, maximizingPlayer, alpha, beta):
-        # Terminating condition. i.e
-        # leaf node is reached
-        if depth == max_depth:
+    def __alpha_beta_pruner(self, world, depth, max_depth, player_index, maximizing, alpha, beta):
+        player = self.gui.players[player_index]
+        possible_moves = get_probable_moves(world, player)
+        if depth == max_depth or len(possible_moves) == 0:
             scores = Counter(world)
-            return scores[2] - scores[1]
+            return (scores[player_index] - scores[(player_index % 2) + 1]), None
+        best_move = None
 
-        if maximizingPlayer:
+        while len(possible_moves) != 0:
+            move = random.choice(possible_moves)
+            possible_moves.remove(move)
+            tmp_world = list(world)
+            width = get_width(tmp_world)
+            x, y = get_coord_of_cell(move, width)
+            tmp_world[move] = player.player_id
 
-            best = self.ALPHA
+            for nX, nY in get_all_neighbors(x, y, width):
+                tmp_world[get_ref_index(width, nX, nY)] = player.player_id
 
-            # Recur for left and right children
-            for i in range(0, 2):
-
-                val = minimax(depth + 1, nodeIndex * 2 + i,
-                              False, values, alpha, beta)
+            if maximizing:
+                best = self.ALPHA
+                val, _ = self.__alpha_beta_pruner(tmp_world, depth + 1, max_depth, (player_index + 1) % 2, False, alpha, beta)
                 best = max(best, val)
+                if best > alpha:
+                    best_move = move
                 alpha = max(alpha, best)
-
-                # Alpha Beta Pruning
                 if beta <= alpha:
                     break
-
-            return best
-
-        else:
-            best = self.BETA
-
-            # Recur for left and
-            # right children
-            for i in range(0, 2):
-
-                val = minimax(depth + 1, nodeIndex * 2 + i,
-                              True, values, alpha, beta)
+            else:
+                best = self.BETA
+                val, _ = self.__alpha_beta_pruner(tmp_world, depth + 1, max_depth, (player_index + 1) % 2, True, alpha, beta)
                 best = min(best, val)
+                if best < beta:
+                    best_move = move
                 beta = min(beta, best)
-
-                # Alpha Beta Pruning
                 if beta <= alpha:
                     break
-
-            return best
+        return best, best_move

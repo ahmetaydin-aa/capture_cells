@@ -54,7 +54,7 @@ def get_probable_moves(world: list, player: Player) -> list:
     return [i for i in current_cells if has_occupied_cell(i)]
 
 
-def can_be_captured(world: list, x: int, y: int, player: Player, player_of_the_turn: int, ai_try: bool = False) -> (bool, str):
+def can_be_captured(world: list, x: int, y: int, player: Player, player_of_the_turn: int, ai_try: bool = False) -> (bool, str, list):
     if player.player_id == player_of_the_turn or ai_try:
         width = get_width(world)
         if x < width and y < width:
@@ -77,12 +77,12 @@ def can_be_captured(world: list, x: int, y: int, player: Player, player_of_the_t
 
             if grid_value == 0 and border_condition:
                 player.first_turn = False
-                return True, ""
+                return True, "", get_all_neighbors(x, y, width)
             else:
-                return False, reason
+                return False, reason, []
         else:
             reason = "Selected cell is out of world boundary."
-            return False, reason
+            return False, reason, []
     else:
         reason = "It's not your turn."
-        return False, reason
+        return False, reason, []

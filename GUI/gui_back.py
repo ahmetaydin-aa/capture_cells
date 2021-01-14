@@ -34,8 +34,7 @@ class GUI(object):
         return world_matrix
 
     def print_world(self) -> None:
-        width = self.get_width()
-        world_matrix = [map(str, self.world[i:i + width]) for i in range(0, width*width, width)]
+        world_matrix = self.get_world_matrix()
         for row in world_matrix:
             print(" ".join(row))
 
@@ -59,8 +58,8 @@ class GUI(object):
             return True
         return False
 
-    def capture_cell(self, x: int, y: int, player: Player) -> (bool, str):
-        result, reason = can_be_captured(self.world, x, y, player, self.which_players_turn())
+    def capture_cell(self, x: int, y: int, player: Player) -> (bool, str, list):
+        result, reason, neighbors = can_be_captured(self.world, x, y, player, self.which_players_turn())
 
         if result:
             self.set_cell(x, y, player.player_id)
@@ -71,7 +70,7 @@ class GUI(object):
             self.next_turn()
             if self.recalculate_scores():
                 self.game_over = True
-                return True, "Game Over"
+                return True, "Game Over", neighbors
         if "game over" in reason.lower():
             self.game_over = True
-        return result, reason
+        return result, reason, neighbors

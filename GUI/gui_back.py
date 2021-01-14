@@ -14,8 +14,8 @@ class GUI(object):
     def __init__(self, grid_size: int) -> None:
         self.world = [0 for _ in range(grid_size * grid_size)]
 
-    def new_player(self, name: str, position: Position) -> Player:
-        self.players.append(Player(name, position))
+    def new_player(self, name: str, position: Position, color) -> Player:
+        self.players.append(Player(name, position, color))
         return self.players[-1]
 
     def which_players_turn(self) -> int:

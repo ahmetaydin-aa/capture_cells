@@ -11,7 +11,7 @@ class AlphaBetaPruner(object):
         self.gui = gui
 
     def get_my_best_move(self, player_index: int = 0):
-        return self.__alpha_beta_pruner(self.gui.world, 0, 5, player_index, player_index, True, self.ALPHA, self.BETA)
+        return self.__alpha_beta_pruner(self.gui.world, 0, 3, player_index, player_index, True, self.ALPHA, self.BETA)
 
     def __alpha_beta_pruner(self, world, depth, max_depth, player_index, maximizing_player_index, maximizing, alpha, beta):
         player = self.gui.players[player_index]

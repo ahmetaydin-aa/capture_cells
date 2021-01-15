@@ -14,7 +14,7 @@ coordinates_by_button = {}
 player_instance = None
 ai_instance = None
 backend = None
-grid_size = 25
+grid_size = 5
 
 def window(grid_size):
     app = QApplication(sys.argv)
@@ -27,17 +27,21 @@ def window(grid_size):
         coord = coordinates_by_button[app.sender()]
         valid_action, backend_message, cells = backend.capture_cell(coord[0], coord[1], player_instance)
         if valid_action and not backend.game_over:
-            app.sender().setStyleSheet(f'background-color: {player_instance.get_color()};')    
+            cells.append(coord)
             paint_cells(player_instance, cells)
             move_score, move = pruner.get_my_best_move(0)
             if move != None:
                 x, y = get_coord_of_cell(move, backend.get_width())
-                print("x:", x, "- y:", y, " --", move_score)
+                print("x:", x, "- y:", y, " --", move_score, move)
                 _, _, cells = backend.capture_cell(x, y, ai_instance)
-                cells.append([x,y])
+                cells.append([x, y])
                 paint_cells(ai_instance, cells)
             else:
                 backend.game_over = True
+                print("="*20)
+                print("Game Over!!!")
+            print(ai_instance.player + ":", ai_instance.score)
+            print(player_instance.player + ":", player_instance.score)
 
     for i in range(grid_size):
         for j in range(grid_size):
@@ -56,7 +60,7 @@ def window(grid_size):
     x, y = get_coord_of_cell(move, backend.get_width())
     print("x:", x, "- y:", y, " --", move_score)
     _, _, cells = backend.capture_cell(x, y, ai_instance)
-    cells.append([x,y])
+    cells.append([x, y])
     paint_cells(ai_instance, cells)
 
     widget.setLayout(layout)
@@ -66,8 +70,11 @@ def window(grid_size):
 
 def paint_cells(player, cells_to_be_painted) -> None:
     color = player.get_color()
-    for cell in  cells_to_be_painted:
-        buttons_by_coordinate[(cell[0], cell[1])].setStyleSheet(f'background-color: {color};')    
+    captured_cell = cells_to_be_painted[-1]
+    for cell in cells_to_be_painted:
+        buttons_by_coordinate[(cell[0], cell[1])].setStyleSheet(f'background-color: {color};')
+    buttons_by_coordinate[(captured_cell[0], captured_cell[1])].setText(u"\u2593")
+
 
 if __name__ == "__main__":
     backend = GUI(grid_size)

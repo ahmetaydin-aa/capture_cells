@@ -6,6 +6,7 @@ from GUI.utils import *
 from AI.alpha_beta import AlphaBetaPruner
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QGridLayout, QPushButton
 from PyQt5.QtCore import pyqtSlot
+import random
 
 SCREEN_RESOLUTION = 500
 buttons_by_coordinate = {}
@@ -14,7 +15,8 @@ coordinates_by_button = {}
 player_instance = None
 ai_instance = None
 backend = None
-grid_size = 25
+grid_size = 10
+
 
 def window(grid_size):
     app = QApplication(sys.argv)
@@ -38,6 +40,8 @@ def window(grid_size):
                 paint_cells(ai_instance, cells)
             else:
                 backend.game_over = True
+            print("AI:", ai_instance.score)
+            print("Player:", player_instance.score)
 
     for i in range(grid_size):
         for j in range(grid_size):
@@ -52,11 +56,10 @@ def window(grid_size):
             # add to the layout
             layout.addWidget(button, i, j)
 
-    move_score, move = pruner.get_my_best_move(0)
+    move = random.choice(get_probable_moves(backend.get_world(), ai_instance))
     x, y = get_coord_of_cell(move, backend.get_width())
-    print("x:", x, "- y:", y, " --", move_score)
     _, _, cells = backend.capture_cell(x, y, ai_instance)
-    cells.append([x,y])
+    cells.append([x, y])
     paint_cells(ai_instance, cells)
 
     widget.setLayout(layout)

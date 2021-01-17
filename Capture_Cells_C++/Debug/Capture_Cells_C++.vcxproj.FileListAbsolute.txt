@@ -1,0 +1,2 @@
+D:\Apps\C++\Capture_Cells_C++\Debug\Capture_Cells_C++.exe
+D:\Apps\C++\Capture_Cells_C++\Debug\Capture_Cells_C++.pdb

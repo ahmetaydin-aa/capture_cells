@@ -1,0 +1,10 @@
+﻿  Reading Qt configuration (D:/Qt/5.15.2/msvc2019/bin/qmake)
+  moc GuiFront.h
+  AlphaBetaPruner.cpp
+  GuiBack.cpp
+  GuiFront.cpp
+  main.cpp
+  Player.cpp
+  Utils.cpp
+  moc_GuiFront.cpp
+  Capture_Cells_C++.vcxproj -> D:\Apps\C++\Capture_Cells_C++\Debug\Capture_Cells_C++.exe

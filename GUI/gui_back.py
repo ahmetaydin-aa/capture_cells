@@ -47,8 +47,8 @@ class GUI(object):
     def get_cell(self, x: int, y: int) -> int:
         return self.world[self.get_ref_index(x, y)]
 
-    def set_cell(self, x: int, y: int, value: int) -> None:
-        self.world[self.get_ref_index(x, y)] = value
+    def set_cell(self, x: int, y: int, player: Player) -> None:
+        self.world[self.get_ref_index(x, y)] = player.player_id
 
     def recalculate_scores(self) -> bool:
         scores = Counter(self.world)
@@ -62,10 +62,10 @@ class GUI(object):
         result, reason, neighbors = can_be_captured(self.world, x, y, player, self.which_players_turn())
 
         if result:
-            self.set_cell(x, y, player.player_id)
+            self.set_cell(x, y, player)
 
             for nX, nY in get_all_neighbors(x, y, self.get_width()):
-                self.set_cell(nX, nY, player.player_id)
+                self.set_cell(nX, nY, player)
 
             self.next_turn()
             if self.recalculate_scores():

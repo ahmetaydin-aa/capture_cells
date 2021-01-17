@@ -11,7 +11,7 @@ class AlphaBetaPruner(object):
         self.gui = gui
 
     def get_my_best_move(self, player_index: int = 0):
-        return self.__alpha_beta_pruner(self.gui.world, 0, 3, player_index, player_index, True, self.ALPHA, self.BETA)
+        return self.__alpha_beta_pruner(self.gui.world, 0, 10, player_index, player_index, True, self.ALPHA, self.BETA)
 
     def __alpha_beta_pruner(self, world, depth, max_depth, player_index, maximizing_player_index, maximizing, alpha, beta):
         player = self.gui.players[player_index]
@@ -20,6 +20,11 @@ class AlphaBetaPruner(object):
             scores = Counter(world)
             return (scores[maximizing_player_index] - scores[(maximizing_player_index % 2) + 1]), None
         best_move = None
+
+        if maximizing:
+            best = self.ALPHA
+        else:
+            best = self.BETA
 
         while len(possible_moves) != 0:
             move = random.choice(possible_moves)
@@ -33,7 +38,7 @@ class AlphaBetaPruner(object):
                 tmp_world[get_ref_index(width, nX, nY)] = player.player_id
 
             if maximizing:
-                best = self.ALPHA
+                # best = self.ALPHA
                 val, _ = self.__alpha_beta_pruner(tmp_world, depth + 1, max_depth, (player_index + 1) % 2, player_index, False, alpha, beta)
                 best = max(best, val)
                 if best > alpha:
@@ -42,7 +47,7 @@ class AlphaBetaPruner(object):
                 if beta <= alpha:
                     break
             else:
-                best = self.BETA
+                # best = self.BETA
                 val, _ = self.__alpha_beta_pruner(tmp_world, depth + 1, max_depth, (player_index + 1) % 2, player_index, True, alpha, beta)
                 best = min(best, val)
                 if best < beta:

@@ -1,20 +1,29 @@
 #include "GuiFront.h"
-#include <iostream>
-#include <vector>
-#include <QtWidgets/QPushButton>
-
-GuiFront::GuiFront(GuiBack* backend, int gridSize) : QWidget() {
+#include <QDebug>
+#include <QMessageBox>
+#include <QApplication>
+#include <QProcess>
+GuiFront::GuiFront(GuiBack* backend, int gridSize, int depthSize) : QWidget() {
     this->setWindowTitle("Capture Cells");
     this->backend = backend;
     this->aiInstance = backend->newPlayer("AI", Position::S, "yellow");
     this->pInstance = backend->newPlayer("Player", Position::N, "blue");
-
+    this->AIScore = new QLabel("0");
+    this->playerScore = new QLabel("0");
     this->gridSize = gridSize;
-    this->pruner = new AlphaBetaPruner(backend);
-    this->layout = new QGridLayout();
-    this->layout->setSpacing(0);
-    this->layout_beginning = new QGridLayout();
-    
+    this->pruner = new AlphaBetaPruner(backend, depthSize);
+    this->gameLayout = new QGridLayout();
+    QVBoxLayout* mainLayout = new QVBoxLayout(this);
+
+    this->gameLayout->setSpacing(0);
+    //this->layout_beginning = new QGridLayout();
+
+    QHBoxLayout* hBox = new QHBoxLayout();
+    hBox->addWidget(new QLabel("AI Score:"));
+    hBox->addWidget(this->AIScore);
+    hBox->addWidget(new QLabel("Player Score:"));
+    hBox->addWidget(this->playerScore);
+
     for (int i = 0; i < gridSize*gridSize; i++) {
         CellButton* button = new CellButton(i);
         button->setStyleSheet("background-color: white;");
@@ -24,9 +33,11 @@ GuiFront::GuiFront(GuiBack* backend, int gridSize) : QWidget() {
         this->buttons.push_back(button);
 
         std::vector<int> coords = Utils::getCoordOfCell(i, gridSize);
-        this->layout->addWidget(button, coords[1], coords[0]);
+        this->gameLayout->addWidget(button, coords[1], coords[0]);
     }
-    this->setLayout(this->layout);
+    mainLayout->addLayout(gameLayout,0);
+    this->setLayout(mainLayout);
+    mainLayout->addLayout(hBox, 1 );
 
     std::srand(time(NULL));
     MoveResult result;
@@ -52,7 +63,7 @@ GuiFront::~GuiFront() {
     delete this->aiInstance;
     delete this->pInstance;
     delete this->backend;
-    delete this->layout;
+    delete this->gameLayout;
     delete this->pruner;
 }
 
@@ -79,10 +90,12 @@ void GuiFront::on_click() {
         result.neighbors.push_back(coords);
         this->paintCells(this->pInstance, result.neighbors);
         move = this->pruner->getMyBestMove(0);
+
         
         if (move[1] != -1) {
             coords = Utils::getCoordOfCell(move[1], this->gridSize);
             std::cout << coords[0] << " - " << coords[1] << " -- " << move[0] << "\n";
+
             result = this->backend->captureCell(coords[0], coords[1], this->aiInstance);
             result.neighbors.push_back(coords);
             this->paintCells(this->aiInstance, result.neighbors);
@@ -91,9 +104,27 @@ void GuiFront::on_click() {
             this->backend->gameOver = true;
         }
     }
-
+    if(backend->gameOver)
+    {
+        QMessageBox msg;
+        QString result = aiInstance->score > pInstance->score ? "AI Won!": "You Won!";
+        msg.setText(result);
+        msg.setWindowTitle("Game Over");
+        msg.setIcon(QMessageBox::Icon::Critical);
+        msg.exec();
+        qApp->quit();
+        QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
+    }
     std::cout << "AI: " << this->aiInstance->score << "\n";
+    AIScore->setText(QString::number(aiInstance->score));
+    playerScore->setText(QString::number(pInstance->score));
     std::cout << "Player: " << this->pInstance->score << "\n\n";
+}
+
+GuiFront::GuiFront(QWidget *parent)
+    : QWidget(parent)
+{
+
 }
 
 CellButton::CellButton(int id) {

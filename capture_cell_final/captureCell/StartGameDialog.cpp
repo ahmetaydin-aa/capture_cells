@@ -6,8 +6,8 @@ StartGameDialog::StartGameDialog(QWidget *parent) :
     ui(new Ui::StartGameDialog)
 {
     ui->setupUi(this);
-    ui->treeDepthLineEdit->setText("12");
-    ui->gridSizeLineEdit->setText("6");
+    ui->treeDepthLineEdit->setText("5");
+    ui->gridSizeLineEdit->setText("10");
 }
 
 int StartGameDialog::GetTreeDepth()
@@ -20,7 +20,7 @@ int StartGameDialog::GetTreeDepth()
     }
     else
     {
-        return 12;
+        return 5;
     }
 }
 
@@ -34,7 +34,7 @@ int StartGameDialog::GetGridSize()
     }
     else
     {
-        return 6;
+        return 10;
     }
 }
 

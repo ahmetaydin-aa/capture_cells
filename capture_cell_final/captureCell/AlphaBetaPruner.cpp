@@ -13,7 +13,7 @@ AlphaBetaPruner::~AlphaBetaPruner() {
 }
 
 std::vector<int> AlphaBetaPruner::getMyBestMove(int pIndex) {
-    return this->prune(backend->getWorld(), 0, depth, pIndex, pIndex, true, this->ALPHA, this->BETA);
+    return this->prune(backend->getWorld(), 0, depth, pIndex, pIndex, false, this->ALPHA, this->BETA);
 }
 
 std::vector<int> AlphaBetaPruner::prune(std::vector<int> world, int depth, int maxDepth, int pIndex, int maximizingPlayerIndex, bool maximizing, int alpha, int beta) {

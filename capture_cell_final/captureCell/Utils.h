@@ -20,4 +20,5 @@ public:
 	static std::vector<std::vector<int>> getAllNeighbors(int x, int y, int width);
 	static std::vector<int> getProbableMoves(std::vector<int> world, Player* player);
 	static MoveResult canBeCaptured(std::vector<int> world, int x, int y, Player* player, int playerOfTurn, bool aiTry=false);
+    static void writeHashedDataToLog(std::fstream* log_file, std::string log);
 };

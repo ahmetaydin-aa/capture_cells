@@ -23,6 +23,9 @@ std::vector<int> AlphaBetaPruner::prune(std::vector<int> world, int depth, int m
 	Player* player = this->backend->players[pIndex];
 	int width = Utils::getWidth(world);
 	std::vector<int> possibleMoves = Utils::getProbableMoves(world, player);
+    if (possibleMoves.size() > this->maxBranching) {
+        this->maxBranching = possibleMoves.size();
+    }
 
 	if (depth == maxDepth || possibleMoves.size() == 0) {
 		std::vector<int> scores = Utils::calculateScores(world);
@@ -75,4 +78,8 @@ std::vector<int> AlphaBetaPruner::prune(std::vector<int> world, int depth, int m
     }
 
 	return result;
+}
+
+unsigned long long AlphaBetaPruner::getMaxBraching() {
+    return this->maxBranching;
 }

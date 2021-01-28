@@ -6,6 +6,7 @@
 class AlphaBetaPruner {
 	const int ALPHA = -10000;
 	const int BETA = 10000;
+    unsigned long long maxBranching = 0;
 	
 	GuiBack* backend = nullptr;
     int depth;
@@ -15,4 +16,5 @@ public:
     AlphaBetaPruner(GuiBack* backend, int depthSize);
 	~AlphaBetaPruner();
 	std::vector<int> getMyBestMove(int pIndex = 0);
+    unsigned long long getMaxBraching();
 };

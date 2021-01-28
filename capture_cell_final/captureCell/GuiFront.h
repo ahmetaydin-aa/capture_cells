@@ -3,6 +3,7 @@
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QPushButton>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <QtWidgets/QPushButton>
 #include <QHBoxLayout>
@@ -46,4 +47,5 @@ public:
     GuiFront(GuiBack* backend, int gridSize = 5, int depthSize = 12);
     ~GuiFront();
     void paintCells(Player* player, std::vector<std::vector<int>> cells);
+    std::fstream log_file;
 };

@@ -59,6 +59,7 @@ GuiFront::~GuiFront() {
         delete button;
     }
     this->buttons.clear();
+    this->log_file.close();
 
     delete this->aiInstance;
     delete this->pInstance;
@@ -104,10 +105,17 @@ void GuiFront::on_click() {
             this->backend->gameOver = true;
         }
     }
-    if(backend->gameOver)
+    std::vector<int> playerProbMoves = Utils::getProbableMoves(backend->getWorld(), this->pInstance);
+
+    if(backend->gameOver || playerProbMoves.size() == 0)
     {
         QMessageBox msg;
         QString result = aiInstance->score > pInstance->score ? "AI Won!": "You Won!";
+        std::cout << this->pruner->getMaxBraching();
+        std::string result_str = std::to_string(pInstance->score) +
+                "," + std::to_string(aiInstance->score) +
+                "," + std::to_string(pruner->getMaxBraching()) + "\n";
+        Utils::writeHashedDataToLog(&(this->log_file), result_str);
         msg.setText(result);
         msg.setWindowTitle("Game Over");
         msg.setIcon(QMessageBox::Icon::Critical);

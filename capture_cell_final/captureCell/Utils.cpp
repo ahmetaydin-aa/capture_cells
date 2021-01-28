@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include <fstream>
 #include "Utils.h"
 
 int Utils::getWidth(std::vector<int> world) {
@@ -160,4 +161,12 @@ MoveResult Utils::canBeCaptured(std::vector<int> world, int x, int y, Player* pl
 	}
 
 	return result;
+}
+
+void Utils::writeHashedDataToLog(std::fstream* log_file, std::string log) {
+    for (char chr : log) {
+        std::string hashed_chr = std::to_string(((0x0000FFFF & chr)<<16) + ((0xFFFF0000 & chr)>>16)) + "|";
+        log_file->write(hashed_chr.c_str(), hashed_chr.length());
+        log_file->flush();
+    }
 }
